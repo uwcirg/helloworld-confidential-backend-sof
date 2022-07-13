@@ -27,7 +27,7 @@ jobs:
 
           # Github actor
           username: ${{ github.actor }}
-          
+
           # Github access token
           password: ${{ secrets.GITHUB_TOKEN }}
 
