@@ -1,0 +1,36 @@
+# docker continuous delivery
+# deliver docker images to configured repo with tags to match branches and git tags
+---
+name: Build & Deliver
+on: [push]
+jobs:
+  build:
+    # only build if tests pass
+    # needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git commit
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+
+      - name: Set environment variable for version from git output
+        run: echo "VERSION_STRING=$(git describe --always --tags)" >> $GITHUB_ENV
+
+      - name: Publish to Github Container Registry
+        # TODO: pin to hash
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          # https://help.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions
+          name: ${{ github.repository }}
+          registry: ghcr.io
+
+          # Github actor
+          username: ${{ github.actor }}
+
+          # Github access token
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+          # create docker image tags to match git tags
+          tag_names: true
+          buildargs: VERSION_STRING

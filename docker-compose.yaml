@@ -2,10 +2,18 @@
 version: "3.4"
 services:
   backend:
+    depends_on:
+      - redis
+    image: "uwcirg/helloworld-confidential-backend-sof:${DOCKER_IMAGE_TAG:-develop}"
     build:
       context: .
     ports:
       # allow override of published port
       - ${P_PORT:-5000}:5000
+    environment:
+      SESSION_REDIS: redis://redis:6379/0
     env_file:
       - backend.env
+
+  redis:
+    image: redis
