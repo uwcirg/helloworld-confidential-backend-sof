@@ -2,6 +2,7 @@ FROM python:3.7
 
 WORKDIR /opt/app
 
+LABEL org.opencontainers.image.source https://github.com/uwcirg/helloworld-confidential-backend-sof
 ARG VERSION_STRING
 ENV VERSION_STRING=$VERSION_STRING
 
